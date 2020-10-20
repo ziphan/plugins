@@ -1,7 +1,9 @@
 /**
  * 宝胜前端插件
  * 将常用组件改为插件，进行全局注册，方便开发使用
- * 在 main.js 中 Vue.use(Ps) 即可
+ * 在 main.js 中
+ * import Ps from "./plugins/ps";
+ * Vue.use(Ps)
  */
 import MultiInput from "./multi-input/index.js";
 import MultiSelect from "./multi-select/index.js";
