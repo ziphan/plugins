@@ -246,6 +246,7 @@ export default {
       );
       this.params.bizContent.jsonvalue.pager.pageno = 1;
       const params = JSON.parse(JSON.stringify(this.params));
+      // 过滤参数，值为空的参数不发送到后端
       params.bizContent.jsonvalue.data = params.bizContent.jsonvalue.data.filter(
         item => item.objectvalue != ""
       );
@@ -294,6 +295,10 @@ export default {
     },
     /**
      * 取消动作，将不保留此次的操作
+     * 取消时，将差异列表中的选项进行反选操作，使 multiSelectTable 复原
+     * diff: 由 diff_1 和 diff_2 组成差异列表
+     * diff_1: multiSelectTable 中存在，cachedMultiSelectTable 中不存在
+     * diff_2: multiSelectTable 中不存在，cachedMultiSelectTable 中存在
      */
     handleCancel() {
       const diff_1 = this.multiSelectTable.filter(item => {
@@ -311,17 +316,29 @@ export default {
       this.multiSelectTable = this.cachedMultiSelectTable;
       this.dialogTableVisible = false;
     },
+    /**
+     * 选中单行时更新 multiSelectTable
+     */
     handleSelectionChange(val) {
       this.multiSelectTable = val;
     },
+    /**
+     * 单行选中状态切换
+     */
     handleToggleSelect(row) {
       this.$refs.multiSelectTable.toggleRowSelection(row);
     },
+    /**
+     * 翻页
+     */
     handleCurrentChange(val) {
       this.loading = true;
       this.params.bizContent.jsonvalue.pager.pageno = val;
       this.getTableData(this.params);
     },
+    /**
+     * 从后端获取列表，并更新页面数据
+     */
     getTableData(params) {
       getDoService(params)
         .then(res => {
